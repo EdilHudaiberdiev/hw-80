@@ -40,7 +40,31 @@ categoriesRouter.get('/:id', async (req, res) => {
     }
 });
 
+categoriesRouter.delete('/:id', async (req, res) => {
+    if (!req.params.id) {
+        res.status(400).send({"error": "Id params must be in url"});
+    }
 
+    let category = await categoriesDB.deleteCategoryById(req.params.id);
+    res.send(category);
+});
+
+categoriesRouter.put('/:id', async (req, res) => {
+    if (!req.params.id) {
+        res.status(400).send({"error": "Id params must be in url"});
+    }
+
+    if (req.body.id) {
+        res.status(400).send({"error": "Id can't be changed"});
+    }
+
+    if (req.body.title || req.body.description) {
+        let category = await categoriesDB.editCategoryById(req.body, req.params.id);
+        res.send(category);
+    } else {
+        res.status(400).send({"error": "Only title or description field can be in req body"});
+    }
+});
 
 
 export default categoriesRouter
