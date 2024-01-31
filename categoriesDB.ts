@@ -2,7 +2,7 @@ import {promises as fs} from 'fs';
 import * as crypto from 'crypto';
 import {ICategory, ICategoryWithoutId} from "./types";
 
-const fileName = './db.json';
+const fileName = './categories.json';
 let data: ICategory[] = [];
 
 const categoriesDb = {
@@ -28,6 +28,18 @@ const categoriesDb = {
     },
     async getCategories() {
         return data;
+    },
+    async findCategoryById(id: string) {
+
+        if (data.length > 0 && id) {
+            let category: ICategory | undefined = data.find(category => category.id === id);
+
+            if (category !== undefined) {
+                return category;
+            } else  {
+                return null;
+            }
+        }
     },
 };
 
