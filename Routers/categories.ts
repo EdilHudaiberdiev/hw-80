@@ -8,9 +8,11 @@ categoriesRouter.post('/', async (req, res) => {
         res.status(404).send({"error": "Message must be present in the request"});
     }
 
+    let description = req.body.description ? req.body.description : '';
+
     let newCategory: ICategoryWithoutId = {
         title: req.body.title,
-        description: '',
+        description: description,
     };
 
     newCategory = await categoriesDB.addCategoryToJson(newCategory);
