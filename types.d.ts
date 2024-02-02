@@ -19,4 +19,17 @@ export interface ILocationWithoutId {
     title: string,
     description: string
 }
+export interface IItem {
+    id: string,
+    title: string,
+    category: string,
+    location: string,
+    description: string,
+}
+export interface IItemWithoutId {
+    title: string,
+    category: string,
+    location: string,
+    description: string,
+}
 

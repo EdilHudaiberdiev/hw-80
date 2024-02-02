@@ -1,9 +1,9 @@
 import {Router} from 'express';
 import locationsDB from "../locationsDB";
 import {ILocation, ILocationWithoutId} from "../types";
-const locationRouter = Router();
+const locationsRouter = Router();
 
-locationRouter.post('/', async (req, res) => {
+locationsRouter.post('/', async (req, res) => {
     if (!req.body.title) {
         res.status(404).send({"error": "Message must be present in the request"});
     }
@@ -19,7 +19,7 @@ locationRouter.post('/', async (req, res) => {
     res.send(newLocation)
 });
 
-locationRouter.get('/', async (req, res) => {
+locationsRouter.get('/', async (req, res) => {
     let location: ILocation[];
 
     location = await locationsDB.getLocations();
@@ -28,7 +28,7 @@ locationRouter.get('/', async (req, res) => {
     res.send(location);
 });
 
-locationRouter.get('/:id', async (req, res) => {
+locationsRouter.get('/:id', async (req, res) => {
    if (!req.params.id) {
        res.status(400).send({"error": "Id params must be in url"});
    }
@@ -42,7 +42,7 @@ locationRouter.get('/:id', async (req, res) => {
    }
 });
 
-locationRouter.delete('/:id', async (req, res) => {
+locationsRouter.delete('/:id', async (req, res) => {
     if (!req.params.id) {
         res.status(400).send({"error": "Id params must be in url"});
     }
@@ -51,7 +51,7 @@ locationRouter.delete('/:id', async (req, res) => {
     res.send(location);
 });
 
-locationRouter.put('/:id', async (req, res) => {
+locationsRouter.put('/:id', async (req, res) => {
     if (!req.params.id) {
         res.status(400).send({"error": "Id params must be in url"});
     }
@@ -68,4 +68,4 @@ locationRouter.put('/:id', async (req, res) => {
     }
 });
 
-export default locationRouter
+export default locationsRouter
