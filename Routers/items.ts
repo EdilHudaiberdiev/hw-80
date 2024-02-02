@@ -33,4 +33,44 @@ itemsRouter.get('/', async (req, res) => {
     res.send(item);
 });
 
+itemsRouter.get('/:id', async (req, res) => {
+    if (!req.params.id) {
+        res.status(400).send({"error": "Id params must be in url"});
+    }
+
+    let item = await itemsDB.findItemById(req.params.id);
+
+    if (item) {
+        res.send(item);
+    } else {
+        res.send('This item was not found');
+    }
+});
+
+itemsRouter.delete('/:id', async (req, res) => {
+    if (!req.params.id) {
+        res.status(400).send({"error": "Id params must be in url"});
+    }
+
+    let item = await itemsDB.deleteItemById(req.params.id);
+    res.send(item);
+});
+
+itemsRouter.put('/:id', async (req, res) => {
+    if (!req.params.id) {
+        res.status(400).send({"error": "Id params must be in url"});
+    }
+
+    if (req.body.id) {
+        res.status(400).send({"error": "Id can't be changed"});
+    }
+
+    if (req.body.title || req.body.description || req.body.category || req.body.location) {
+        let item = await itemsDB.editItemById(req.body, req.params.id);
+        res.send(item);
+    } else {
+        res.status(400).send({"error": "Only title, category, location, item or description field can be in req body"});
+    }
+});
+
 export default itemsRouter

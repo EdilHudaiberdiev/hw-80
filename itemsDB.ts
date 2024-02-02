@@ -24,6 +24,48 @@ const itemsDb = {
         return newItem;
     },
 
+    async findItemById(id: string) {
+
+        if (data.length > 0 && id) {
+            let item: IItem | undefined = data.find(item => item.id === id);
+
+            if (item !== undefined) {
+                return item;
+            } else  {
+                return null;
+            }
+        }
+    },
+    async deleteItemById(id: string) {
+        if (data.length > 0 && id) {
+            let item = await this.findItemById(id);
+
+            if (item) {
+                data = data.filter(item => item.id !== id);
+                await this.save();
+                return 'Item was deleted';
+            } else {
+                return 'This item was not found';
+            }
+        }
+    },
+    async editItemById(itemBody: IItem, id: string) {
+        if (data.length > 0 && id) {
+            let item = await this.findItemById(id);
+
+            if (item) {
+                item = {...item, ...itemBody};
+                await this.deleteItemById(id);
+                data.push(item);
+                await this.save();
+
+                return item;
+            } else {
+                return 'This item was not found';
+            }
+        }
+    },
+
     async save() {
         return fs.writeFile(fileName, JSON.stringify(data));
     },

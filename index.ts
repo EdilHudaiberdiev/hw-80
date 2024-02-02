@@ -4,6 +4,7 @@ import categoriesDB from './categoriesDB';
 import locationsRouter from "./Routers/locations";
 import locationsDB from "./locationsDB";
 import itemsRouter from "./Routers/items";
+import itemsDB from "./itemsDB";
 const cors = require('cors');
 
 const app = express();
@@ -18,7 +19,7 @@ app.use('/items', itemsRouter);
 const run = async () => {
     await categoriesDB.init();
     await locationsDB.init();
-    // await itemDB.init();
+    await itemsDB.init();
 
     app.listen(port, () => {
         console.log(`Server started on ${port} port!`);
