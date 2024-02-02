@@ -1,5 +1,6 @@
 import {promises as fs} from 'fs';
 import * as crypto from 'crypto';
+import itemsDB from './itemsDB';
 import {ILocation, ILocationWithoutId} from "./types";
 
 const fileName = './locations.json';
@@ -40,13 +41,18 @@ const locationsDB = {
     async deleteLocationById(id: string) {
         if (data.length > 0 && id) {
             let location = await this.findLocationById(id);
+            let itemByCategoryId = await itemsDB.findItemByCategoryIdOrLocationId(id);
 
-            if (location) {
+            if (location === null) {
+                return 'This location was not found';
+            }
+
+            if (location && !itemByCategoryId) {
                 data = data.filter(location => location.id !== id);
                 await this.save();
                 return 'Location was deleted';
-            } else {
-                return 'This category was not found';
+            } else if (location && itemByCategoryId) {
+                return 'Item has this location id, so first delete item with that location_id';
             }
         }
     },

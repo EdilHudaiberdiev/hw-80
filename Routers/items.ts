@@ -5,22 +5,28 @@ import {imagesUpload} from "../multer";
 const itemsRouter = Router();
 
 itemsRouter.post('/', imagesUpload.single('image'), async (req, res) => {
-    if (!req.body.title || !req.body.category || !req.body.location ) {
+    if (!req.body.title || !req.body.category_id || !req.body.location_id ) {
         res.status(404).send({"error": "Message must be present in the request"});
     }
 
     let description = req.body.description ? req.body.description : '';
 
-    let newItem: IItemWithoutId = {
+    let newItem: IItemWithoutId | null = {
         title: req.body.title,
-        category: req.body.category,
-        location: req.body.location,
+        category_id: req.body.category_id,
+        location_id: req.body.location_id,
         description: description,
         image: req.file ? req.file.filename : null,
     };
 
     newItem = await itemsDB.addItemToJson(newItem);
-    res.send(newItem);
+
+    if (newItem !== null){
+        res.send(newItem);
+    } else {
+        res.status(404).send({"error": "Category_id or Location_id not found"});
+    }
+
 });
 
 itemsRouter.get('/', async (req, res) => {

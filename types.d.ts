@@ -22,15 +22,15 @@ export interface ILocationWithoutId {
 export interface IItem {
     id: string,
     title: string,
-    category: string,
-    location: string,
+    category_id: string,
+    location_id: string,
     description: string,
     image: string | null,
 }
 export interface IItemWithoutId {
     title: string,
-    category: string,
-    location: string,
+    category_id: string,
+    location_id: string,
     description: string,
     image: string | null,
 }

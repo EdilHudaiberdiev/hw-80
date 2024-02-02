@@ -1,5 +1,6 @@
 import {promises as fs} from 'fs';
 import * as crypto from 'crypto';
+import itemsDB from './itemsDB';
 import {ICategory, ICategoryWithoutId} from "./types";
 
 const fileName = './categories.json';
@@ -38,13 +39,18 @@ const categoriesDb = {
     async deleteCategoryById(id: string) {
         if (data.length > 0 && id) {
             let category = await this.findCategoryById(id);
+            let itemByCategoryId = await itemsDB.findItemByCategoryIdOrLocationId(id);
 
-            if (category) {
+            if (category === null) {
+                return 'This category was not found';
+            }
+
+            if (category && !itemByCategoryId) {
                 data = data.filter(category => category.id !== id);
                 await this.save();
                 return 'Category was deleted';
-            } else {
-                return 'This category was not found';
+            } else if (category && itemByCategoryId) {
+                return 'Item has this category id, so first delete item with that category_id';
             }
         }
     },

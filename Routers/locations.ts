@@ -29,17 +29,17 @@ locationsRouter.get('/', async (req, res) => {
 });
 
 locationsRouter.get('/:id', async (req, res) => {
-   if (!req.params.id) {
-       res.status(400).send({"error": "Id params must be in url"});
-   }
+    if (!req.params.id) {
+        res.status(400).send({"error": "Id params must be in url"});
+    }
 
-   let location = await locationsDB.findLocationById(req.params.id);
+    let location = await locationsDB.findLocationById(req.params.id);
 
-   if (location) {
-       res.send(location);
-   } else {
-       res.send('This location was not found')
-   }
+    if (location) {
+        res.send(location);
+    } else {
+        res.send('This location was not found')
+    }
 });
 
 locationsRouter.delete('/:id', async (req, res) => {

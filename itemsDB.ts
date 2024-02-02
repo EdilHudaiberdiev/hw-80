@@ -1,5 +1,7 @@
 import {promises as fs} from 'fs';
 import * as crypto from 'crypto';
+import CategoriesDB from './categoriesDB';
+import LocationsDB from './locationsDB';
 import {IItem, IItemWithoutId} from "./types";
 
 const fileName = './items.json';
@@ -16,23 +18,45 @@ const itemsDb = {
     },
     async addItemToJson(item: IItemWithoutId) {
         const id = crypto.randomUUID();
-        const newItem = {...item, id}
+        const newItem: IItem = {...item, id}
 
-        data.push(newItem);
-        await this.save();
+        let category = await CategoriesDB.findCategoryById(item.category_id);
+        let location = await LocationsDB.findLocationById(item.location_id);
 
-        return newItem;
+        if (category !== null && location !== null) {
+            data.push(newItem);
+            await this.save();
+
+            return newItem;
+        } else {
+            return null;
+        }
     },
 
     async findItemById(id: string) {
 
         if (data.length > 0 && id) {
+            let itemData = await itemsDb;
             let item: IItem | undefined = data.find(item => item.id === id);
 
             if (item !== undefined) {
                 return item;
             } else  {
                 return null;
+            }
+        }
+    },
+
+    async findItemByCategoryIdOrLocationId(id: string) {
+
+        if (data.length > 0 && id) {
+            let itemByCategory: IItem | undefined = data.find(item => item.category_id === id);
+            let itemByLocation: IItem | undefined = data.find(item => item.location_id === id);
+
+            if (itemByCategory !== undefined || itemByLocation  !== undefined) {
+                return true;
+            } else  {
+                return false;
             }
         }
     },
