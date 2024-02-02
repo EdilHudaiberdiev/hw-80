@@ -1,12 +1,10 @@
 import {Router} from 'express';
-import {ICategory, IItem, IItemWithoutId} from "../types";
+import {IItem, IItemWithoutId} from "../types";
 import itemsDB from "../itemsDB";
-import categoriesDB from "../categoriesDB";
-import categoriesRouter from "./categories";
-import locationsDB from "../locationsDB";
+import {imagesUpload} from "../multer";
 const itemsRouter = Router();
 
-itemsRouter.post('/', async (req, res) => {
+itemsRouter.post('/', imagesUpload.single('image'), async (req, res) => {
     if (!req.body.title || !req.body.category || !req.body.location ) {
         res.status(404).send({"error": "Message must be present in the request"});
     }
@@ -18,6 +16,7 @@ itemsRouter.post('/', async (req, res) => {
         category: req.body.category,
         location: req.body.location,
         description: description,
+        image: req.file ? req.file.filename : null,
     };
 
     newItem = await itemsDB.addItemToJson(newItem);

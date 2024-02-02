@@ -25,11 +25,13 @@ export interface IItem {
     category: string,
     location: string,
     description: string,
+    image: string | null,
 }
 export interface IItemWithoutId {
     title: string,
     category: string,
     location: string,
     description: string,
+    image: string | null,
 }
 
